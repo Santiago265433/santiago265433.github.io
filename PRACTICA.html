@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBERZODIAC • Neon del Futuro</title>
+    <style>
+        /* Importamos la fuente estilo retro arcade de Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        /* SECCIÓN 1: VARIABLES GLOBALES */
+        /* La pseudo-clase :root funciona como una lista de variables de colores para usar en todo el documento. */
+        :root {
+            --neon-cyan: #00f0ff;
+            --neon-pink: #ff00aa;
+            --neon-purple: #9d00ff;
+            --neon-green: #00ff9d;
+            --neon-yellow: #ffff00;
+            --dark-bg: #0a001f;
+        }
+
+        /* SECCIÓN 2: RESETEO GENERAL */
+        /* El asterisco (*) selecciona TODOS los elementos de la página. 
+           Las llaves {} encierran las reglas que quitan márgenes por defecto. */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* SECCIÓN 3: CUERPO DE LA PÁGINA (BODY) */
+        body {
+            background: var(--dark-bg); /* Usa la variable de fondo oscuro */
+            color: #fff;
+            font-family: 'Press Start 2P', system-ui;
+            overflow-x: hidden; /* Evita que la página se desplace hacia los lados */
+            position: relative;
+        }
+
+        /* EFECTO DE FONDO CYBERPUNK */
+        /* ::before crea una capa invisible detrás de todo para poner la cuadrícula (grid) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Crea líneas horizontales y verticales simulando un escáner */
+            background: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none; /* Evita que la cuadrícula interfiera con los clics */
+            animation: gridMove 20s linear infinite; /* Llama a la animación de abajo */
+            z-index: -1;
+        }
+
+        /* ANIMACIÓN DEL FONDO */
+        /* @keyframes agrupa los pasos (0% al 100%) para dar sensación de movimiento continuo */
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        /* SECCIÓN 4: BARRA DE NAVEGACIÓN (NAV) */
+        nav {
+            position: fixed; /* Mantiene la barra siempre arriba al hacer scroll */
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 0, 31, 0.95);
+            backdrop-filter: blur(10px); /* Efecto de cristal borroso */
+            border-bottom: 3px solid var(--neon-cyan);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 0 20px var(--neon-cyan); /* Brillo debajo de la barra */
+        }
+
+        /* ESTILO DEL LOGO EN LA BARRA */
+        .logo {
+            font-size: 1.4rem;
+            color: var(--neon-pink);
+            /* Crea el efecto visual de un tubo de neón brillante */
+            text-shadow: 
+                0 0 10px var(--neon-pink),
+                0 0 20px var(--neon-pink);
+            letter-spacing: 4px;
+        }
+
+        /* LISTA DE ENLACES DEL MENÚ */
+        .nav-links {
+            display: flex; /* Agrupa los enlaces en una fila horizontal */
+            gap: 30px; /* Separación entre cada enlace */
+        }
+
+        /* ESTILO DE CADA ENLACE INDIVIDUAL */
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        /* EFECTO HOVER: Cuando pasas el ratón sobre un enlace */
+        .nav-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        /* LÍNEA ANIMADA DEBAJO DE LOS ENLACES (Subrayado) */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0; /* Empieza oculta */
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: var(--neon-cyan);
+            transition: width 0.3s;
+        }
+
+        /* Muestra la línea al pasar el ratón */
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* SECCIÓN 5: CABECERA PRINCIPAL (HERO) */
+        .hero {
+            height: 100vh; /* Ocupa el 100% de la pantalla visible */
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Centra todo el contenido en el medio */
+            position: relative;
+            margin-top: 70px; /* Deja espacio para que el nav no lo tape */
+        }
+
+        /* CONTENEDOR DE LA ÓRBITA */
+        .orbit-wrapper {
+            position: relative;
+            width: 620px;
+            height: 620px;
+        }
+
+        /* CAJA DEL TÍTULO CENTRAL */
+        .central-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Lo centra matemáticamente de forma exacta */
+            text-align: center;
+            z-index: 10; /* Asegura que quede por encima de las órbitas */
+        }
+
+        /* ESTILO DEL TEXTO DEL TÍTULO PRINCIPAL */
+        .central-title h1 {
+            font-size: 4.5rem;
+            letter-spacing: 12px;
+            /* Crea un degradado usando 3 colores neón de nuestra lista de variables */
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple));
+            -webkit-background-clip: text; /* Aplica el fondo solo al texto */
+            background-clip: text;
+            color: transparent; /* Oculta el color base para que se vea el degradado */
+            /* Múltiples sombras para un brillo extremo */
+            text-shadow: 
+                0 0 20px var(--neon-cyan),
+                0 0 40px var(--neon-pink),
+                0 0 60px var(--neon-purple);
+            /* Llama a la animación 'glitch' que crearemos justo abajo */
+            animation: glitch 1.5s infinite alternate;
+        }
+
+        /* ANIMACIÓN GLITCH (Interferencia/Holograma defectuoso) */
+        /* Las llaves {} de @keyframes agrupan los pasos de la animación. */
+        @keyframes glitch {
+            0% { transform: translate(0); } /* Posición original */
+            20% { transform: translate(-3px, 3px); } /* Se mueve izquierda y abajo */
+            40% { transform: translate(3px, -3px); } /* Se mueve derecha y arriba */
+            60% { transform: translate(-2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); } /* Vuelve a la normalidad */
+        }
+
+        /* ESTILO DEL SUBTÍTULO (Párrafo debajo del título central) */
+        .central-title p {
+            font-size: 1rem;
+            color: var(--neon-green); /* Usa la variable de color verde neón */
+            margin-top: 10px;
+            text-shadow: 0 0 15px var(--neon-green); /* Brillo verde */
+            letter-spacing: 6px; /* Separa las letras para un look más cibernético */
+        }
+
+        /* ANILLO DE LA ÓRBITA */
+        /* Este contenedor será el círculo invisible que agrupa los signos y gira */
+        .orbit-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 520px;
+            height: 520px;
+            transform: translate(-50%, -50%); /* Centra el anillo perfectamente */
+            /* Hace que todo el anillo gire 360 grados durante 45 segundos de forma constante e infinita */
+            animation: orbitSpin 45s linear infinite;
+        }
+
+        /* ESTILO BASE DE CADA SIGNO DEL ZODIACO (Emojis) */
+        .zodiac-emoji {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 2.8rem; /* Tamaño del emoji */
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* drop-shadow crea un resplandor que toma el color del propio emoji (currentColor) */
+            filter: drop-shadow(0 0 15px currentColor);
+            transition: transform 0.4s; /* Suaviza el movimiento si cambian de tamaño */
+        }
+
+        /* POSICIONAMIENTO CIRCULAR DE LOS EMOJIS (Lista de elementos) */
+        /* :nth-child(numero) selecciona cada emoji individualmente en orden.
+           Las llaves {} aquí solo guardan una variable (--angle) con los grados
+           matemáticos para repartirlos en un reloj (de 30 en 30 grados). */
+        .zodiac-emoji:nth-child(1)  { --angle: 0deg; }
+        .zodiac-emoji:nth-child(2)  { --angle: 30deg; }
+        .zodiac-emoji:nth-child(3)  { --angle: 60deg; }
+        .zodiac-emoji:nth-child(4)  { --angle: 90deg; }
+        .zodiac-emoji:nth-child(5)  { --angle: 120deg; }
+        .zodiac-emoji:nth-child(6)  { --angle: 150deg; }
+        .zodiac-emoji:nth-child(7)  { --angle: 180deg; }
+        .zodiac-emoji:nth-child(8)  { --angle: 210deg; }
+        .zodiac-emoji:nth-child(9)  { --angle: 240deg; }
+        .zodiac-emoji:nth-child(10) { --angle: 270deg; }
+        .zodiac-emoji:nth-child(11) { --angle: 300deg; }
+        .zodiac-emoji:nth-child(12) { --angle: 330deg; }
+
+        /* MAGIA MATEMÁTICA PARA EL CÍRCULO */
+        /* Las llaves {} aplican esta regla a todos los emojis.
+           1. rotate(var(--angle)): Gira hacia la dirección del ángulo.
+           2. translate(250px): Lo empuja hacia el borde del anillo.
+           3. rotate(calc(-1 * var(--angle))): Lo vuelve a girar en reversa para que el emoji no quede de cabeza. */
+        .zodiac-emoji {
+            transform: rotate(var(--angle)) translate(250px) rotate(calc(-1 * var(--angle)));
+        }
+
+        /* ANIMACIÓN DE LA ÓRBITA */
+        /* Hace que el anillo completo gire de 0 a 360 grados */
+        @keyframes orbitSpin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to   { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* SECCIÓN 6: ZONA DE SIGNOS (#signos) */
+        /* El # selecciona un elemento por su ID. Aquí configuramos el fondo degradado de la sección */
+        #signos {
+            padding: 100px 5%;
+            background: linear-gradient(to bottom, #0a001f, #1a0033);
+            position: relative;
+        }
+
+        /* Título de la sección de signos */
+        #signos h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 60px;
+            color: var(--neon-pink);
+            text-shadow: 0 0 30px var(--neon-pink);
+        }
+
+        /* CUADRÍCULA (GRID) DE LOS SIGNOS */
+        /* Las llaves {} configuran un sistema de celdas automático. 
+           'repeat(auto-fit, minmax(220px, 1fr))' hace que los botones se acomoden solos 
+           dependiendo del tamaño de la pantalla (Responsive Design), sin usar Media Queries. */
+        .signos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px; /* Espacio entre los botones */
+            max-width: 1400px;
+            margin: 0 auto; /* Centra la cuadrícula en la pantalla */
+        }
+
+        /* BOTONES DE CADA SIGNO */
+        /* Estilo base de las tarjetas de cada signo del zodiaco */
+        .sign-btn {
+            background: rgba(10, 0, 31, 0.8);
+            border: 3px solid var(--neon-cyan);
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); /* Animación suave al pasar el ratón */
+            box-shadow: 
+                0 0 15px var(--neon-cyan),
+                0 0 30px rgba(0, 240, 255, 0.3);
+            position: relative;
+            overflow: visible;
+        }
+
+        /* EFECTO DE DESTELLO EN LOS BOTONES */
+        /* ::before crea una barra de luz diagonal invisible sobre el botón */
+        .sign-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 40%;
+            height: 300%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255,255,255,0.4),
+                transparent
+            );
+            transform: skewX(-25deg); /* Inclina la luz */
+            animation: shine 4s infinite; /* Llama a la animación de destello */
+        }
+
+        /* Animación que mueve la luz de izquierda a derecha simulando un reflejo */
+        @keyframes shine {
+            100% { transform: translateX(300%); }
+        }
+
+        /* EFECTO AL PASAR EL RATÓN SOBRE EL BOTÓN */
+        /* Las llaves {} hacen que el botón se haga más grande (scale), flote hacia arriba (translateY) y cambie a color rosa */
+        .sign-btn:hover {
+            transform: scale(1.08) translateY(-10px);
+            border-color: var(--neon-pink);
+            box-shadow: 
+                0 0 30px var(--neon-pink),
+                0 0 50px rgba(255, 0, 170, 0.6);
+        }
+
+        /* EMOJI DENTRO DEL BOTÓN */
+        .sign-btn .emoji {
+            font-size: 4.5rem;
+            display: block;
+            margin-bottom: 15px;
+            transition: transform 0.4s;
+            position: relative;
+            z-index: 2; /* Lo mantiene por encima del efecto de destello */
+        }
+
+        /* Hace que el emoji gire al pasar el ratón por el botón */
+        .sign-btn:hover .emoji {
+            transform: rotate(360deg) scale(1.2);
+        }
+
+        /* TEXTO DEL BOTÓN (Nombre del signo) */
+        .sign-btn h3 {
+            color: #fff;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* SECCIÓN 7: SISTEMA DE PARTÍCULAS (JavaScript las creará después) */
+        /* Estilo base de los puntitos de luz */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            animation: particleFloat 1s ease-out forwards;
+            z-index: 1;
+        }
+
+        /* Animación que hace que las partículas floten y desaparezcan */
+        @keyframes particleFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1; /* Totalmente visible */
+            }
+            100% {
+                /* var(--tx) y var(--ty) serán calculados por JavaScript para esparcirlas */
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0; /* Desaparece */
+            }
+        }
+
+        /* SECCIÓN 8: VENTANA EMERGENTE (MODAL CYBERPUNK) */
+        /* Contenedor principal oscuro que tapa toda la pantalla */
+        .modal {
+            display: none; /* Oculto por defecto hasta que se haga clic en un signo */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 0, 31, 0.95);
+            backdrop-filter: blur(12px); /* Desenfoca el fondo */
+            align-items: center;
+            justify-content: center;
+            z-index: 9999; /* Asegura que esté por encima de TODO */
+        }
+
+        /* Caja de contenido de la ventana emergente */
+        .modal-content {
+            background: #110033;
+            width: 100%;
+            max-width: 620px;
+            border: 5px solid var(--neon-cyan);
+            border-radius: 20px;
+            padding: 40px 30px;
+            position: relative;
+            /* Crea un resplandor doble (cyan y rosa) detrás de la ventana emergente */
+            box-shadow: 
+                0 0 40px var(--neon-cyan),
+                0 0 80px var(--neon-pink);
+            animation: modalPop 0.4s ease; /* Efecto de rebote al abrirse */
+        }
+
+        /* ANIMACIÓN DE LA VENTANA EMERGENTE */
+        @keyframes modalPop {
+            0% { transform: scale(0.7); opacity: 0; } /* Empieza pequeña e invisible */
+            100% { transform: scale(1); opacity: 1; } /* Termina a tamaño real y visible */
+        }
+
+        /* BOTÓN DE CERRAR LA VENTANA (La "X" en la esquina) */
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px; /* La ubica en la esquina superior derecha */
+            font-size: 2.5rem;
+            color: var(--neon-pink);
+            cursor: pointer;
+            text-shadow: 0 0 15px var(--neon-pink);
+            transition: transform 0.3s;
+        }
+
+        /* Hace que la "X" gire 90 grados al pasar el ratón */
+        .modal-close:hover {
+            transform: rotate(90deg);
+        }
+
+        /* EMOJI GIGANTE DENTRO DE LA VENTANA EMERGENTE */
+        .modal-emoji {
+            font-size: 7rem;
+            text-align: center;
+            margin-bottom: 20px;
+            display: block; /* Obliga al emoji a ocupar su propia línea y centrarse */
+        }
+
+        /* TÍTULO DEL SIGNO EN LA VENTANA (Ej. "ARIES") */
+        .modal h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--neon-pink);
+        }
+
+        /* FECHAS DEL SIGNO (Ej. "21 de Marzo - 19 de Abril") */
+        .modal .dates {
+            text-align: center;
+            color: var(--neon-green);
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        /* LISTA HORIZONTAL DE INFORMACIÓN EXTRA (Elemento y Planeta) */
+        .modal .info-grid {
+            display: flex; /* Convierte los elementos en una lista horizontal */
+            gap: 30px; /* Separación entre columnas */
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        /* CADA ITEM DE LA LISTA DE INFORMACIÓN */
+        .modal .info-item {
+            text-align: center;
+        }
+
+        /* ETIQUETAS DE LA INFORMACIÓN (Ej. "Elemento:", "Planeta:") */
+        .modal .info-item strong {
+            display: block;
+            color: var(--neon-cyan);
+            font-size: 0.9rem;
+            margin: 20px; /* Separación entre el título de la etiqueta y su valor */
+        }
+
+        /* TEXTO DESCRIPTIVO DEL SIGNO (El párrafo largo) */
+        .modal p {
+            line-height: 1.6; /* Espacio entre las líneas de texto para mejor lectura */
+            font-size: 1.1rem;
+            text-align: center;
+            color: #ddd; /* Gris claro */
+        }
+
+        /* PIE DE PÁGINA (FOOTER) */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #555;
+            font-size: 0.8rem;
+            border-top: 2px dashed var(--neon-cyan); /* Línea punteada superior */
+        }
+
+        /* DISEÑO RESPONSIVO (PARA MÓVILES) */
+        /* Las llaves {} de @media agrupan cambios de estilo que SOLO se aplican
+           si la pantalla mide menos de 768 píxeles de ancho (celulares y tablets). */
+        @media (max-width: 768px) {
+            .central-title h1 { font-size: 3rem; } /* Achica el título principal */
+            .orbit-wrapper { width: 420px; height: 420px; } /* Achica el contenedor de la órbita */
+            .orbit-ring { width: 360px; height: 360px; } /* Achica el anillo */
+            .zodiac-emoji { font-size: 2.2rem; } /* Achica los emojis */
+            /* Recalcula el radio del círculo para que los emojis no se salgan de la pantalla en móviles (translate a 170px en lugar de 250px) */
+            .zodiac-emoji { transform: rotate(var(--angle)) translate(170px) rotate(calc(-1 * var(--angle))); }
+        }
+    </style>
+</head>
+
+<!-- INICIO DEL CUERPO VISIBLE DE LA PÁGINA (HTML) -->
+<body>
+
+    <!-- MENÚ DE NAVEGACIÓN SUPERIOR -->
+    <nav>
+        <!-- Logotipo -->
+        <div class="logo">Zodiaco</div>
+        
+        <!-- Lista de enlaces de navegación -->
+        <div class="nav-links">
+            <a href="#hero">Inicio</a>
+            <a href="#signos">Mira tu Signo!</a>
+            <!-- Este botón usa Javascript (onclick) para recargar la página entera -->
+            <a href="#" onclick="window.location.reload()">REINICIAR NEON</a>
+        </div>
+        
+        <!-- Texto de adorno al lado derecho -->
+        <div style="color: var(--neon-green); font-size: 0.8rem; letter-spacing: 2px;">
+            2026 • NEON EDITION
+        </div>
+    </nav>
+
+    <!-- SECCIÓN PRINCIPAL DE INICIO (HERO) -->
+    <section id="hero" class="hero">
+        <!-- Contenedor general del efecto de planetario/órbita -->
+        <div class="orbit-wrapper">
+            
+            <!-- Título central ("Los Signos del Zodiaco") -->
+            <div class="central-title">
+                <h1>Los Signos del Zodiaco</h1>
+                <p>SIGNOS DEL ZODIACO • MIRA TU SIGNO</p>
+            </div>
+
+            <!-- Anillo que gira (Lista de emojis) -->
+            <div class="orbit-ring">
+                <!-- Se inyecta color individual directamente a cada signo con el atributo 'style' -->
+                <span class="zodiac-emoji" style="color: #ff00aa;">♈</span>
+                <span class="zodiac-emoji" style="color: #00ff9d;">♉</span>
+                <span class="zodiac-emoji" style="color: #00f0ff;">♊</span>
+                <span class="zodiac-emoji" style="color: #ff00aa;">♋</span>
+                <span class="zodiac-emoji" style="color: #00ff9d;">♌</span>
+                <span class="zodiac-emoji" style="color: #00f0ff;">♍</span>
+                <span class="zodiac-emoji" style="color: #ff00aa;">♎</span>
+                <span class="zodiac-emoji" style="color: #00ff9d;">♏</span>
+                <span class="zodiac-emoji" style="color: #00f0ff;">♐</span>
+                <span class="zodiac-emoji" style="color: #ff00aa;">♑</span>
+                <span class="zodiac-emoji" style="color: #00ff9d;">♒</span>
+                <span class="zodiac-emoji" style="color: #00f0ff;">♓</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN DONDE ESTARÁN TODOS LOS BOTONES DE LOS SIGNOS -->
+    <section id="signos">
+        <h2>ELIGE TU SIGNO</h2>
+        
+        <!-- Cuadrícula vacía (div). Aquí es donde Javascript meterá todos los botones automáticamente más adelante -->
+        <div class="signos-grid" id="signos-grid">
+            <!-- Los botones se generan con JavaScript -->
+        </div>
+    </section>
+
+    <!-- LA VENTANA EMERGENTE OCULTA (MODAL) -->
+    <!-- Este div contiene toda la ventana que se abre al hacer clic en un signo -->
+    <div id="modal" class="modal">
+        <!-- Contenedor interior de la ventana con bordes de neón -->
+        <div class="modal-content">
+            <!-- Botón X para cerrar. onclick="cerrarModal()" llama a una función de Javascript -->
+            <span class="modal-close" onclick="cerrarModal()">×</span>
+            
+            <!-- Espacios vacíos que Javascript rellenará con la información del signo que elegiste -->
+            <span id="modal-emoji" class="modal-emoji"></span>
+            <h2 id="modal-nombre"></h2>
+            <div id="modal-dates" class="dates"></div>
+
+            <!-- Cuadrícula para mostrar el elemento y el planeta del signo -->
+            <div class="info-grid">
+                <!-- Columna del Elemento -->
+                <div class="info-item">
+                    <strong>ELEMENTO</strong>
+                    <!-- Div vacío donde JS inyectará el elemento (Fuego, Tierra, etc.) -->
+                    <div id="modal-elemento" style="color:#00ff9d; font-size:1.4rem;"></div>
+                </div>
+                <!-- Columna del Planeta -->
+                <div class="info-item">
+                    <strong>PLANETA</strong>
+                    <!-- Div vacío donde JS inyectará el planeta (Marte, Venus, etc.) -->
+                    <div id="modal-planeta" style="color:#00f0ff; font-size:1.4rem;"></div>
+                </div>
+            </div>
+            
+            <!-- Párrafo vacío donde JS inyectará la descripción larga del signo -->
+            <p id="modal-descripcion"></p>
+            
+            <!-- Botón extra en la parte inferior para cerrar la ventana emergente -->
+            <div style="text-align:center; margin-top:30px;">
+                <!-- onclick="cerrarModal()" ejecuta la función de cierre en JS -->
+                <button onclick="cerrarModal()" 
+                        style="background: transparent; border: 3px solid var(--neon-pink); color: var(--neon-pink); padding: 12px 40px; font-family: 'Press Start 2P'; cursor: pointer; border-radius: 8px;">
+                    Volver a los signos 
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIE DE PÁGINA DE LA WEB -->
+    <footer>
+        Hecho con Estilo cyberpunk
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- INICIO DE JAVASCRIPT (LÓGICA DEL PROGRAMA) -->
+    <!-- ========================================== -->
+    <script>
+        
+        // SECCIÓN 1 DE JS: BASE DE DATOS DE LOS SIGNOS
+        // Aquí declaramos una variable constante llamada 'zodiacSigns'.
+        // Los CORCHETES [] significan que esto es una LISTA (Array) que contiene varios elementos.
+        // Las LLAVES {} dentro de la lista representan un OBJETO (un signo individual). 
+        // Cada objeto tiene sus propias "propiedades" (nombre, emoji, fechas, etc.).
+        const zodiacSigns = [
+            { // Abre el objeto del primer signo
+                name: "Aries", // Propiedad nombre
+                emoji: "♈",    // Propiedad icono
+                dates: "21 marzo – 19 abril",
+                element: "FUEGO",
+                planet: "MARTE",
+                description: "Líderes natos del bajo mundo. Impulsivos, valientes y siempre listos para hackear el sistema. En el neon de la noche, tú eres quien enciende la chispa de la rebelión."
+            }, // Cierra el objeto de Aries y la coma separa con el siguiente
+            {
+                name: "Tauro",
+                emoji: "♉",
+                dates: "20 abril – 20 mayo",
+                element: "TIERRA",
+                planet: "VENUS",
+                description: "Estables como un servidor blindado. Disfrutan del lujo digital y la seguridad. Nadie te mueve de tu trono de datos y cripto."
+            },
+            {
+                name: "Géminis",
+                emoji: "♊",
+                dates: "21 mayo – 20 junio",
+                element: "AIRE",
+                planet: "MERCURIO",
+                description: "Dos mentes en un solo cuerpo. Maestros del multitasking y el engaño digital. Hablas en código binario y cambias de identidad en milisegundos."
+            },
+            {
+                name: "Cáncer",
+                emoji: "♋",
+                dates: "21 junio – 22 julio",
+                element: "AGUA",
+                planet: "LUNA",
+                description: "Proteges tu red como un firewall emocional. Intuitivo y leal, sientes las vibraciones del ciberespacio antes que nadie."
+            },
+            {
+                name: "Leo",
+                emoji: "♌",
+                dates: "23 julio – 22 agosto",
+                element: "FUEGO",
+                planet: "SOL",
+                description: "El centro del escenario neon. Carismático, dramático y con un ego que ilumina toda la dark web. Todos quieren seguir tu luz."
+            },
+            {
+                name: "Virgo",
+                emoji: "♍",
+                dates: "23 agosto – 22 septiembre",
+                element: "TIERRA",
+                planet: "MERCURIO",
+                description: "Analistas perfectos del código. Nada escapa a tu ojo cibernético. Perfeccionistas que debuggean el caos del universo."
+            },
+            {
+                name: "Libra",
+                emoji: "♎",
+                dates: "23 septiembre – 22 octubre",
+                element: "AIRE",
+                planet: "VENUS",
+                description: "Diplomáticos del metaverso. Buscas equilibrio entre luces y sombras. Tu carisma resuelve hasta los conflictos más tóxicos."
+            },
+            {
+                name: "Escorpio",
+                emoji: "♏",
+                dates: "23 octubre – 21 noviembre",
+                element: "AGUA",
+                planet: "PLUTÓN",
+                description: "Maestros del misterio y la transformación. Penetras en los secretos más profundos del sistema. Nadie escapa de tu mirada."
+            },
+            {
+                name: "Sagitario",
+                emoji: "♐",
+                dates: "22 noviembre – 21 diciembre",
+                element: "FUEGO",
+                planet: "JÚPITER",
+                description: "Exploradores del ciberespacio. Optimistas y aventureros, viajan a través de portales y realidades virtuales sin miedo."
+            },
+            {
+                name: "Capricornio",
+                emoji: "♑",
+                dates: "22 diciembre – 19 enero",
+                element: "TIERRA",
+                planet: "SATURNO",
+                description: "Arquitectos del imperio digital. Disciplinados y ambiciosos, construyen imperios que duran más allá del apagón."
+            },
+            {
+                name: "Acuario",
+                emoji: "♒",
+                dates: "20 enero – 18 febrero",
+                element: "AIRE",
+                planet: "URANO",
+                description: "Visionarios del futuro. Humanitarios y excéntricos, rompen todas las reglas del sistema para crear un mundo mejor."
+            },
+            { // Abre el último objeto
+                name: "Piscis",
+                emoji: "♓",
+                dates: "19 febrero – 20 marzo",
+                element: "AGUA",
+                planet: "NEPTUNO",
+                description: "Soñadores del sueño digital. Empáticos y creativos, navegan entre realidades como si fueran corrientes de datos infinitos."
+            } // Cierra el último objeto
+        ] // Cierra la lista de todos los signos
+
+        // SECCIÓN 2 DE JS: CREACIÓN DE PARTÍCULAS DEL RATÓN
+        // Otra LISTA (Array) usando corchetes []. Esta vez solo guarda textos (colores).
+        const neonColors = [
+            '#00f0ff', // cyan
+            '#ff00aa', // pink
+            '#9d00ff', // purple
+            '#00ff9d', // green
+            '#ffff00', // yellow
+            '#ff6600'  // orange
+        ]
+
+        // FUNCIONES
+        // Las llaves {} de una función agrupan todas las instrucciones que se van a ejecutar
+        // cuando llamemos a 'createParticles'. Recibe 3 datos: posición x, y, y el contenedor.
+        function createParticles(x, y, container) {
+            const particleCount = 12 // Cantidad de partículas a crear en cada explosión
+            
+            // UN BUCLE (Ciclo For)
+            // Las llaves {} aquí dicen: "Repite estas instrucciones 12 veces"
+            for (let i = 0; i < particleCount; i++) {
+                // Crea un nuevo elemento div invisible en el HTML llamado 'particle'
+                const particle = document.createElement('div')
+                particle.className = 'particle'
+                
+                // Calcula un tamaño aleatorio para la partícula (entre 4px y 12px)
+                const size = Math.random() * 8 + 4
+                particle.style.width = `${size}px`
+                particle.style.height = `${size}px`
+                
+                // COLOR ALEATORIO DE LA PARTÍCULA
+                // Los corchetes [] aquí sirven para "sacar" un elemento específico de nuestra lista 'neonColors'.
+                // La fórmula matemática elige un número al azar (ej. el color en la posición 3 de la lista).
+                const color = neonColors[Math.floor(Math.random() * neonColors.length)]
+                particle.style.background = color
+                // Le damos un brillo del mismo color a la partícula
+                particle.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`
+                
+                // POSICIÓN INICIAL DE LA PARTÍCULA (Relativa al botón donde está el ratón)
+                const rect = container.getBoundingClientRect()
+                const relativeX = x - rect.left
+                const relativeY = y - rect.top
+                
+                // Asignamos esa posición al CSS
+                particle.style.left = `${relativeX}px`
+                particle.style.top = `${relativeY}px`
+                
+                // DIRECCIÓN ALEATORIA DE LA EXPLOSIÓN (Cálculo trigonométrico)
+                const angle = (Math.PI * 2 * i) / particleCount + Math.random() * 0.5
+                const distance = Math.random() * 80 + 40
+                const tx = Math.cos(angle) * distance
+                const ty = Math.sin(angle) * distance
+                
+                // Guardamos la dirección en variables CSS (--tx y --ty) para que la animación que hicimos arriba sepa hacia dónde moverse
+                particle.style.setProperty('--tx', `${tx}px`)
+                particle.style.setProperty('--ty', `${ty}px`)
+                
+                // DURACIÓN ALEATORIA (Cada partícula desaparece a un ritmo distinto)
+                particle.style.animationDuration = `${Math.random() * 0.5 + 0.5}s`
+                
+                // Finalmente, "inyectamos" la partícula visualmente en el botón de HTML
+                container.appendChild(particle)
+                
+                // LIMPIEZA DE MEMORIA
+                // setTimeout retrasa una acción. Las llaves {} encierran lo que pasará después de 1000 milisegundos (1 segundo).
+                setTimeout(() => {
+                    // Si la partícula sigue existiendo, bórrala para no saturar la computadora de la persona
+                    if (particle.parentNode) {
+                        particle.remove()
+                    }
+                }, 1000)
+            } // Fin del ciclo for (repite 12 veces)
+        } // Fin de la función createParticles
+
+        // SECCIÓN 3 DE JS: GENERAR BOTONES DE SIGNOS AUTOMÁTICAMENTE
+        // Las llaves {} agrupan la lógica de esta función
+        function crearBotonesSignos() {
+            // Busca la cuadrícula vacía en el HTML que preparamos antes
+            const grid = document.getElementById('signos-grid')
+            grid.innerHTML = '' // La limpia por si acaso
+
+            // CICLO FOREACH (Por cada elemento en la lista)
+            // Recorre nuestra lista [zodiacSigns]. Las llaves {} ejecutan este código por CADA signo (12 veces).
+            zodiacSigns.forEach(signo => {
+                // Crea un nuevo botón div
+                const btn = document.createElement('div')
+                btn.className = 'sign-btn'
+                // Rellena el botón con el emoji y el nombre del signo actual
+                btn.innerHTML = `
+                    <span class="emoji">${signo.emoji}</span>
+                    <h3>${signo.name}</h3>
+                `
+                btn.dataset.name = signo.name
+                
+                // EVENTO CLIC: Cuando hagan clic en este botón, llama a la función mostrarInfo() pasándole los datos de este signo
+                btn.addEventListener('click', () => mostrarInfo(signo))
+                
+                // EVENTO MOVER RATÓN: Genera partículas mientras mueves el cursor sobre el botón
+                btn.addEventListener('mousemove', (e) => {
+                    if (Math.random() > 0.7) { // Solo crea partículas el 30% del tiempo para no saturar la pantalla
+                        createParticles(e.clientX, e.clientY, btn)
+                    }
+                })
+                
+                // EVENTO ENTRAR AL RATÓN: Crea una explosión de partículas justo cuando el ratón entra al botón
+                btn.addEventListener('mouseenter', (e) => {
+                    createParticles(e.clientX, e.clientY, btn)
+                })
+                
+                // Inserta el botón terminado en la cuadrícula de la página
+                grid.appendChild(btn)
+            }) // Fin del ciclo forEach
+        } // Fin de la función
+
+        // SECCIÓN 4 DE JS: MANEJO DE LA VENTANA EMERGENTE (MODAL)
+        
+        // Las llaves {} agrupan la lógica para rellenar y mostrar la ventana
+        function mostrarInfo(signo) {
+            // Busca los elementos vacíos que dejamos en el HTML y los rellena con los datos del objeto (diccionario) 'signo'
+            document.getElementById('modal-emoji').textContent = signo.emoji
+            document.getElementById('modal-nombre').textContent = signo.name
+            document.getElementById('modal-dates').textContent = signo.dates
+            document.getElementById('modal-elemento').textContent = signo.element
+            document.getElementById('modal-planeta').textContent = signo.planet
+            document.getElementById('modal-descripcion').innerHTML = signo.description
+
+            // Muestra la ventana cambiando su estilo de 'none' a 'flex'
+            const modal = document.getElementById('modal')
+            modal.style.display = 'flex'
+        }
+
+        // Función para ocultar la ventana
+        function cerrarModal() {
+            const modal = document.getElementById('modal')
+            modal.style.display = 'none' // La vuelve invisible
+        }
+
+        // SECCIÓN 5 DE JS: ARRANQUE DEL PROGRAMA
+        // window.onload significa: "Cuando toda la página web termine de cargar, ejecuta lo que está en estas llaves {}"
+        window.onload = function() {
+            crearBotonesSignos() // Llama a la función que crea los 12 botones
+            
+            // Un mensaje secreto que solo los programadores verán si abren la consola (F12)
+            console.log('%c¡CYBERZODIAC cargado con éxito! Bienvenido al futuro neon 🔥', 'color:#00f0ff; font-family:monospace; font-size:12px')
+        }
+
+        // ACCESIBILIDAD: Cerrar la ventana con la tecla "Escape"
+        // Escucha si el usuario presiona alguna tecla
+        document.addEventListener('keydown', function(e) {
+            // Las llaves {} del 'if' evalúan una condición: Si la tecla presionada es 'Escape'
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('modal')
+                // Y si la ventana está abierta, la cierra
+                if (modal.style.display === 'flex') cerrarModal()
+            }
+        })
+    </script>
+</body>
+</html>
